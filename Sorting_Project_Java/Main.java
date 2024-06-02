@@ -9,6 +9,4 @@ public class Main {
     public static void main(String[] args){
         new Base();
     }
-    public void setVisible(boolean b) {
-    }
 }
