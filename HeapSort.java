@@ -4,8 +4,6 @@ import java.util.*;
 public class HeapSort extends JPanel {
 
     public void executeHeapSort(ArrayList<Integer> nums, Background draw, Base app) throws InterruptedException {
-        System.out.println(nums);
-
         for (int i = nums.size() / 2 - 1; i >= 0; i--) {
             heapify(nums, nums.size(), i, draw);
         }
@@ -20,7 +18,6 @@ public class HeapSort extends JPanel {
             draw.updateArray(nums);
             draw.revalidate();
             draw.paintImmediately(0, 30, 870, 532);
-            System.out.println(nums);
         }
         app.needReset = true;
     }

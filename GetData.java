@@ -9,7 +9,6 @@ public class GetData {
             nums.add(9 * i);
         }
         Collections.shuffle(nums);
-        System.out.println(nums);
 
         return nums;
     }

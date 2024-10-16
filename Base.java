@@ -1,17 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
+import java.util.*;
 
 
 public class Base extends JFrame implements ActionListener {
 
-     @SuppressWarnings("rawtypes")
     JComboBox algosDropdown;
-     JLabel lblTtl;
-     JLabel name;
-     String selectedAlgo = "";
-     JPanel panelUpper = new JPanel();
+    JLabel lblTtl;
+    JLabel name;
+    String selectedAlgo = "";
+    JPanel panelUpper = new JPanel();
     GetData newArray = new GetData();
     ArrayList<Integer> array = newArray.createArray();
     Background draw = new Background(array);
@@ -24,7 +23,7 @@ public class Base extends JFrame implements ActionListener {
     InsertionSort insertion = new InsertionSort();
     MergeSort merge = new MergeSort();
     HeapSort heap = new HeapSort();
-    TreeSort tree = new TreeSort();
+    QuickSort quick = new QuickSort();
 
     JLabel runtimeLabel;
     JLabel comparisonsLabel;
@@ -36,14 +35,22 @@ public class Base extends JFrame implements ActionListener {
     boolean needReset = false;
     public int noComparisonsMerge;
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public Base(){
+    private Map<String, String[]> algorithmsMap = new HashMap<>() {{
+        put("Bubble Sort", new String[]{"Bubble", "Runtime: n**2"});
+        put("Insertion Sort", new String[]{"Insertion", "Runtime: n**2"});
+        put("Heap Sort", new String[]{"Heap", "Runtime: nlog(n)"});
+        put("Merge Sort", new String[]{"Merge", "Runtime: nlog(n)"});
+        put("Selection Sort", new String[]{"Selection", "Runtime: n**2"});
+        put("Quick Sort", new String[]{"Quick", "Runtime: nlog(n)"});
+    }};
 
-        this.setTitle("Sorting Algorithms");
-        this.setSize(new Dimension(870, 622));
+    public Base() {
+
+        this.setTitle("Sorting an Algorithms");
+        this.setSize(new Dimension(950, 622));
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        lblTtl = new JLabel("Sorting Algorithms");
+        lblTtl = new JLabel("Sorting an Algorithms");
         lblTtl.setBounds(235,0,400,60);
         lblTtl.setFont(new Font("Cascade Firm", Font.BOLD, 30));
         lblTtl.setForeground(Color.black);
@@ -61,8 +68,8 @@ public class Base extends JFrame implements ActionListener {
         runtimeLabel.setForeground(Color.black);
         panelUpper.add(runtimeLabel);
 
-        String[] algorithms = {"Select Algorithm", "Bubble Sort", "Insertion Sort", "Heap Sort", "Merge Sort", "Selection Sort", "Tree Sort"};
-        algosDropdown = new JComboBox(algorithms);
+        String[] algorithms = {"Select an Algorithm", "Bubble Sort", "Insertion Sort", "Heap Sort", "Merge Sort", "Selection Sort", "Quick Sort"};
+        algosDropdown = new JComboBox<>(algorithms);
         algosDropdown.setBounds(690,0,155,30);
         algosDropdown.addActionListener(this);
         panelUpper.add(algosDropdown);
@@ -77,8 +84,8 @@ public class Base extends JFrame implements ActionListener {
         reset.addActionListener(this);
         panelUpper.add(reset);
 
-        panelUpper.setBounds(0,0,870,100);
-        draw.setBounds(0,100,870,522);
+        panelUpper.setBounds(0,0,1000,100);
+        draw.setBounds(0,100,1000,522);
         panelUpper.setBackground(Color.green);
         draw.setBackground(Color.green);
         panelUpper.setLayout(new BorderLayout());
@@ -90,15 +97,12 @@ public class Base extends JFrame implements ActionListener {
     }
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource()==start & algosDropdown.getSelectedItem() != "Select Algorithm" & !needReset) {
-            if (selectedAlgo.equals("Bubble")) {
-                System.out.println("A");
+        if (e.getSource() == start & algosDropdown.getSelectedItem() != "Select an Algorithm" & !needReset) {
+            if (selectedAlgo =="Bubble") {
                 try {
                     bubble.executeBubbleSort(array, draw, this);
-                    System.out.println("B");
                 } catch (InterruptedException interruptedException) {
                     interruptedException.printStackTrace();
-                    System.out.println("C");
                 }
 
             } else if (selectedAlgo == "Selection") {
@@ -127,47 +131,27 @@ public class Base extends JFrame implements ActionListener {
                 } catch (InterruptedException interruptedException) {
                     interruptedException.printStackTrace();
                 }
-            } else if (selectedAlgo == "Tree") {
+            } else if (selectedAlgo == "Quick") {
                 try {
-                    tree.executeTreeSort(array, draw, this);
+                    quick.executeQuickSort(array, draw, this);
                 } catch (InterruptedException interruptedException) {
                     interruptedException.printStackTrace();
                 }
             } 
         }
-            if (e.getSource()==reset) {
+            if (e.getSource() == reset) {
                 array = newArray.createArray();
                 draw.updateArray(array);
                 draw.repaint();
                 needReset = false;
-
             }
-        if (e.getSource()==algosDropdown) {
-            System.out.println(algosDropdown.getSelectedItem());
-            if (algosDropdown.getSelectedItem() == "Bubble Sort") {
-                selectedAlgo = "Bubble";
-                runtimeLabel.setText("Runtime: n**2");
-
-            } else if (algosDropdown.getSelectedItem() == "Insertion Sort") {
-                selectedAlgo = "Insertion";
-                runtimeLabel.setText("Runtime: n**2");
-
-            } else if (algosDropdown.getSelectedItem() == "Heap Sort") {
-                selectedAlgo = "Heap";
-                runtimeLabel.setText("Runtime: nlog(n)");
-
-            } else if (algosDropdown.getSelectedItem() == "Merge Sort") {
-                selectedAlgo = "Merge";
-                runtimeLabel.setText("Runtime: nlog(n)");
-
-            } else if (algosDropdown.getSelectedItem() == "Selection Sort") {
-                selectedAlgo = "Selection";
-                runtimeLabel.setText("Runtime: n**2)");
-
-            } else if (algosDropdown.getSelectedItem() == "Tree Sort") {
-                selectedAlgo = "Tree";
-                runtimeLabel.setText("Runtime: nlog(n)");
-            } 
+        if (e.getSource() == algosDropdown)  {
+            String selectedItem = (String) algosDropdown.getSelectedItem();
+            if (algorithmsMap.containsKey(selectedItem)) {
+                String[] algoInfo = algorithmsMap.get(selectedItem);
+                selectedAlgo = algoInfo[0];
+                runtimeLabel.setText(algoInfo[1]);
+            }
         }
 
     }
